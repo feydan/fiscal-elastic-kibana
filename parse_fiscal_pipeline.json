@@ -1,0 +1,18 @@
+{
+   "description": "Parsing the state of california all fiscal years file",
+   "processors": [
+     {
+       "grok": {
+         "field": "budget",
+         "patterns": [
+           "(\"%{DATA:business_unit}\")?,(\"%{DATA:agency_name}\")?,(\"%{DATA:department_name}\")?,(\"%{DATA}\")?,(\"%{DATA}\")?,(\"%{DATA:accounting_date}\")?,(\"%{DATA}\")?,(\"%{DATA}\")?,(\"%{DATA}\")?,(\"%{DATA:account}\")?,(\"%{DATA:account_type}\")?,(\"%{DATA:account_category}\")?,(\"%{DATA:account_sub_category}\")?,(\"%{DATA:account_description}\")?,(\"%{DATA:fund_code}\")?,(\"%{DATA:fund_group}\")?,(\"%{DATA:fund_description}\")?,(\"%{DATA:program_code}\")?,(\"%{DATA:program_description}\")?,(\"%{DATA:sub_program_description}\")?,(\"%{DATA:budget_reference}\")?,(\"%{DATA:budget_reference_category}\")?,(\"%{DATA:budget_reference_sub_category}\")?,(\"%{DATA:budget_reference_description}\")?,(\"%{DATA:year_of_enactment}\")?,(\"%{NUMBER:monetary_amount}\")?"
+         ]
+       }
+     },
+     {
+       "remove": {
+         "field": "budget"
+       }
+     }
+   ]
+}
