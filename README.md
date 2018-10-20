@@ -2,6 +2,8 @@
 
 Downloads Fiscal Data (http://fiscalca.opengov.com) and imports it into Elasticsearch.  Kibana is installed to explore the data and create custom visualizations and dashboards.
 
+![Alt text](image.png "Kibana screenshot")
+
 ## Installation
 
 - If you do not have docker and docker-compose, install it/them.
