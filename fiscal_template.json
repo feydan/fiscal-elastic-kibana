@@ -6,71 +6,52 @@
  },
  "mappings": {
    "budget": {
-     "properties": {
-       "fund_description": {
-         "type": "keyword"
-       },
-       "account_type": {
-         "type": "keyword"
-       },
-       "program_description": {
-         "type": "keyword"
-       },
-       "sub_program_description": {
-         "type": "keyword"
-       },
-       "year_of_enactment": {
-         "type": "short"
-       },
-       "account_category": {
-         "type": "keyword"
-       },
-       "monetary_amount": {
-         "type": "double"
-       },
-       "fund_code": {
-         "type": "keyword"
-       },
-       "account_description": {
-         "type": "keyword"
-       },
-       "program_code": {
-         "type": "keyword"
-       },
-       "budget_reference_description": {
-         "type": "keyword"
-       },
-       "budget_reference": {
-         "type": "keyword"
-       },
-       "account_sub_category": {
-         "type": "keyword"
-       },
-       "agency_name": {
-         "type": "keyword"
-       },
-       "department_name": {
-         "type": "keyword"
-       },
-       "business_unit": {
-         "type": "keyword"
-       },
-       "fund_group": {
-         "type": "keyword"
-       },
-       "budget_reference_sub_cateogry": {
-         "type": "keyword"
-       },
-       "budget_reference_category": {
-         "type": "keyword"
-       },
-       "accounting_date": {
-         "type": "date"
-       },
-       "account": {
-         "type": "keyword"
-       }
-     }
+     "dynamic_templates": [
+        {
+          "dates": {
+            "match_mapping_type": "date",
+            "mapping": {
+              "type": "date"
+            }
+          }
+        },
+        {
+          "years": {
+            "match": "*year*",
+            "mapping": {
+              "type": "short"
+            }
+          }
+        },
+        {
+          "doubles": {
+            "match_pattern": "regex",
+            "match": "^[a-zA-Z_0-9]*(monetary|amount)[a-zA-Z_0-9]*$",
+            "mapping": {
+              "type": "double"
+            }
+          }
+        },
+        {
+          "shorts": {
+            "match_pattern": "regex",
+            "match": "^[a-zA-Z_0-9]*(period)[a-zA-Z_0-9]*$",
+            "mapping": {
+              "type": "short"
+            }
+          }
+        },
+        {
+          "keywords": {
+            "match_mapping_type": "string",
+            "match_pattern": "regex",
+            "match": "^[a-zA-Z_0-9]*(description|type|category|code|reference|name|unit|group|account|document)[a-zA-Z_0-9]*$",
+            "mapping": {
+              "type": "keyword"
+            }
+          }
+        }
+      ]
    }
  }
 }
