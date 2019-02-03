@@ -16,6 +16,7 @@ To automatically create the elasticsearch template, pipeline, and index, downloa
 
 ## Configure Kibana
 
+- Navigate to kibana http://localhost:5601 and click Visualize
 - You must configure an index pattern.  Just enter `fiscal*` as the pattern.
 - Configure `accounting_date` as the Time Filter field name
 
@@ -85,3 +86,8 @@ The 'processors' pattern represents the pipeline and the 'docs' represents line 
 You may also wish to modify the mapping located in fiscal_template.json to include new fields.  You can check out the Elasticsearch field types here: https://www.elastic.co/guide/en/elasticsearch/reference/6.2/mapping-types.html.
 
 The general pipeline and import setup was modeled after this article: https://www.elastic.co/blog/indexing-csv-elasticsearch-ingest-node.
+
+## Troubleshooting
+
+If while docker is initializing you see a message like "bootstrap checks failed" with "max virtual memory areas vm.max_map_count [65530] likely too low, increase to at least [262144]", the following should fix the issue (run inside of your host linux terminal).
+`sudo sysctl -w vm.max_map_count=262144`

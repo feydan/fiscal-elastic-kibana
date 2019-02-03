@@ -8,10 +8,12 @@ USER kibana
 
 WORKDIR /home/kibana
 
-RUN curl -L -O https://artifacts.elastic.co/downloads/kibana/kibana-6.2.4-linux-x86_64.tar.gz
-RUN tar -xvf kibana-6.2.4-linux-x86_64.tar.gz
+ENV KIBANA_VERSION=6.6.0
+ENV KIBANA_DIR="kibana-${KIBANA_VERSION}-linux-x86_64"
 
-WORKDIR kibana-6.2.4-linux-x86_64
+RUN curl -L https://artifacts.elastic.co/downloads/kibana/${KIBANA_DIR}.tar.gz | tar -xz
+
+WORKDIR ${KIBANA_DIR}
 
 COPY kibana.yml config/kibana.yml
 

@@ -8,10 +8,12 @@ USER elastic
 
 WORKDIR /home/elastic
 
-RUN curl -L -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.2.4.tar.gz
-RUN tar -xvf elasticsearch-6.2.4.tar.gz
+ENV ELASTICSEARCH_VERSION=6.6.0
+ENV ELASTICSEARCH_DIR="elasticsearch-${ELASTICSEARCH_VERSION}"
 
-WORKDIR elasticsearch-6.2.4
+RUN curl -L "https://artifacts.elastic.co/downloads/elasticsearch/${ELASTICSEARCH_DIR}.tar.gz" | tar -xz
+
+WORKDIR ${ELASTICSEARCH_DIR}
 
 COPY elasticsearch.yml config/elasticsearch.yml
 

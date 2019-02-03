@@ -46,41 +46,38 @@ if [ ! -f $dataFile ]; then
 	echo
 fi
 
-# Submit each line as an indexing request to elastic using the parse_fiscal pipeline
-echo "Indexing data file, this could take several hours"
-total=$(wc -l < ${dataFile} | bc)
+# Turn csv into bulk request format
+echo "Processing csv into bulk request format - this may take a few minutes"
+tail -n +2 $dataFile | sed -e 's/"/\\"/g' | xargs -d '\n' printf '{"index":{"_index":"'"$index"'","_type":"budget","pipeline":"parse_fiscal"}\n{"budget":"%s"}\n' > requests.jsonl
+
+# Clean previous
+rm -rf split
+mkdir split
+
+# Split file into chunks to bulk index
+split -l 5000 requests.jsonl split/
+
+# Submit file as a bulk indexing request to elastic using the parse_fiscal pipeline
+echo "Indexing data file"
+total=$(ls split | wc -l | bc)
 i=0;
-requests=''
-while read f1; do
+echo -ne "[#          ] 0/${total} (0%)\r"
+for f in split/*
+do
 	i=$(($i+1))
 
-	# Skip the header line
-	if [[ $i == 1 ]]; then 
-		echo -ne "[#          ] 0/${total} (0%)\r"
-		continue; 
+	# Need to add a newline at the end of each file
+	last=$(tail -n 1 $f)
+	if [[ ! -z "${last}" ]]; then
+		echo "" >> "${f}"
 	fi
 
-	# Escapes quotes
-	f1=$(echo $f1 | sed 's/\"/\\\"/g');
-
-	# Bulk indexing request have an action and a doc
-	action=$(printf '{"index":{"_index":"%s","_type":"budget","pipeline":"parse_fiscal"}' "$index")
-	doc=$(printf '{"budget":"%s"}' "$f1")
-
-	# Build the bulk request
-	requests=$(printf '%s\n%s\n%s' "$requests" "$action" "$doc")
-
-	# If we are not at our payload continue
-	mod=$((${i}%100))
+	mod=$((${i}%2))
 	if [[ $mod != 0 ]]; then
-		continue;
-	fi
-
-	# Make the bulk request
-	curl -s -XPOST "http://localhost:9200/_bulk" -H "Content-Type: application/x-ndjson" -d "${requests}
-" > /dev/null
-	# Reset requests
-	requests=''
+ 		curl -s -XPOST "http://localhost:9200/_bulk" -H "Content-Type: application/x-ndjson" --data-binary "@${f}" > /dev/null
+ 	else
+ 		curl -s -XPOST "http://localhost:9200/_bulk" -H "Content-Type: application/x-ndjson" --data-binary "@${f}" > /dev/null &
+ 	fi
 
 	progress='#'
 	ticks=$(printf "%.0f" $(bc <<< "scale=1; ${i}/${total}*10"))
@@ -90,13 +87,9 @@ while read f1; do
 
 	percent=$(printf "%.0f" $(bc <<< "scale=2; ${i}/${total}*100"))
 	echo -ne "[${progress}] ${i}/${total} (${percent}%)\r"
-done < $dataFile
+done
 
-# Submit final payload
-if [[ $requests != '' ]]; then
-	# Make the bulk request
-	curl -s -XPOST "http://localhost:9200/_bulk" -H "Content-Type: application/x-ndjson" -d "${requests}
-" > /dev/null
-fi
+rm -rf split
+rm requests.jsonl
 
 echo "Import complete"
