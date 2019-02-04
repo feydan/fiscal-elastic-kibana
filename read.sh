@@ -72,8 +72,12 @@ do
 		echo "" >> "${f}"
 	fi
 
+	# The mod value (defaul 2) represents about how many threads to use to make bulk requests
+	# This can be set higher for higher import throughput, but if it is set too high, it could 
+	# cause garbage collection issues and/or crash elasticsearch.
+	# Do not set this higher than your total threads
 	mod=$((${i}%2))
-	if [[ $mod != 0 ]]; then
+	if [[ $mod == 0 ]]; then
  		curl -s -XPOST "http://localhost:9200/_bulk" -H "Content-Type: application/x-ndjson" --data-binary "@${f}" > /dev/null
  	else
  		curl -s -XPOST "http://localhost:9200/_bulk" -H "Content-Type: application/x-ndjson" --data-binary "@${f}" > /dev/null &
