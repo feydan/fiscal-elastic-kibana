@@ -51,7 +51,7 @@ If you wish to modify this processor, you should first use the simulate end poin
 POST _ingest/pipeline/_simulate
 {
  "pipeline": {
-   "description": "Parsing the NYC stations",
+   "description": "Parsing fiscal CSV",
    "processors": [
      {
        "grok": {
