@@ -1,3 +1,6 @@
 transport.tcp.port: 9302
 network.host: 0.0.0.0
 cluster.name: "elasticsearch_cluster"
+node.name: "node1"
+cluster.initial_master_nodes:
+  - "node1"

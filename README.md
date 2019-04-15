@@ -14,13 +14,21 @@ Downloads Fiscal Data (http://fiscalca.opengov.com) and imports it into Elastics
 
 To automatically create the elasticsearch template, pipeline, and index, download the Fiscal data, and start importing, run `./read.sh`.  Once you see the progress indicator, you can start configuring Kibana while the data is importing.
 
-## Configure Kibana
+You can import a sample dashboard in Kibana based on this data. In Kibana (http://localhost:5601), do the following:
+1. Navigate to the gear icon on the lower left
+2. Click on Saved Objects
+3. Click import on the top right and select kibana_objects.json in this project.
+4. Once it uploads, click import at the bottom.
+
+## Configuring Kibana
+
+This is optional if you did not already import kibana_objects.json
 
 - Navigate to kibana http://localhost:5601 and click Visualize
 - You must configure an index pattern.  Just enter `fiscal*` as the pattern.
 - Configure `accounting_date` as the Time Filter field name
 
-## Create a Visualization
+## Creating a Visualization
 
 You can create many different visualizations based on the data.  Follow the directions below to create your first one to get a feel for it.
 

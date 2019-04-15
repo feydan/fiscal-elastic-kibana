@@ -48,7 +48,7 @@ fi
 
 # Turn csv into bulk request format
 echo "Processing csv into bulk request format - this may take a few minutes"
-tail -n +2 $dataFile | sed -e 's/"/\\"/g' | xargs -d '\n' printf '{"index":{"_index":"'"$index"'","_type":"budget","pipeline":"parse_fiscal"}\n{"budget":"%s"}\n' > requests.jsonl
+tail -n +2 $dataFile | sed -e 's/"/\\"/g' | xargs -d '\n' printf '{"index":{"_index":"'"$index"'","pipeline":"parse_fiscal"}\n{"budget":"%s"}\n' > requests.jsonl
 
 # Clean previous
 rm -rf split

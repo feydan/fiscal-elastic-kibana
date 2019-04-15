@@ -8,10 +8,10 @@ USER elastic
 
 WORKDIR /home/elastic
 
-ENV ELASTICSEARCH_VERSION=6.6.0
+ENV ELASTICSEARCH_VERSION=7.0.0
 ENV ELASTICSEARCH_DIR="elasticsearch-${ELASTICSEARCH_VERSION}"
 
-RUN curl -L "https://artifacts.elastic.co/downloads/elasticsearch/${ELASTICSEARCH_DIR}.tar.gz" | tar -xz
+RUN curl -L "https://artifacts.elastic.co/downloads/elasticsearch/${ELASTICSEARCH_DIR}-linux-x86_64.tar.gz" | tar -xz
 
 WORKDIR ${ELASTICSEARCH_DIR}
 

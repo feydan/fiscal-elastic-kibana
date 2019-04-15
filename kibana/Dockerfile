@@ -8,7 +8,7 @@ USER kibana
 
 WORKDIR /home/kibana
 
-ENV KIBANA_VERSION=6.6.0
+ENV KIBANA_VERSION=7.0.0
 ENV KIBANA_DIR="kibana-${KIBANA_VERSION}-linux-x86_64"
 
 RUN curl -L https://artifacts.elastic.co/downloads/kibana/${KIBANA_DIR}.tar.gz | tar -xz

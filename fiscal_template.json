@@ -5,53 +5,51 @@
    "number_of_replicas": 0
  },
  "mappings": {
-   "budget": {
-     "dynamic_templates": [
-        {
-          "dates": {
-            "match_mapping_type": "date",
-            "mapping": {
-              "type": "date"
-            }
-          }
-        },
-        {
-          "years": {
-            "match": "*year*",
-            "mapping": {
-              "type": "short"
-            }
-          }
-        },
-        {
-          "doubles": {
-            "match_pattern": "regex",
-            "match": "^[a-zA-Z_0-9]*(monetary|amount)[a-zA-Z_0-9]*$",
-            "mapping": {
-              "type": "double"
-            }
-          }
-        },
-        {
-          "shorts": {
-            "match_pattern": "regex",
-            "match": "^[a-zA-Z_0-9]*(period)[a-zA-Z_0-9]*$",
-            "mapping": {
-              "type": "short"
-            }
-          }
-        },
-        {
-          "keywords": {
-            "match_mapping_type": "string",
-            "match_pattern": "regex",
-            "match": "^[a-zA-Z_0-9]*(description|type|category|code|reference|name|unit|group|account|document)[a-zA-Z_0-9]*$",
-            "mapping": {
-              "type": "keyword"
-            }
+   "dynamic_templates": [
+      {
+        "dates": {
+          "match_mapping_type": "date",
+          "mapping": {
+            "type": "date"
           }
         }
-      ]
-   }
+      },
+      {
+        "years": {
+          "match": "*year*",
+          "mapping": {
+            "type": "short"
+          }
+        }
+      },
+      {
+        "doubles": {
+          "match_pattern": "regex",
+          "match": "^[a-zA-Z_0-9]*(monetary|amount)[a-zA-Z_0-9]*$",
+          "mapping": {
+            "type": "double"
+          }
+        }
+      },
+      {
+        "shorts": {
+          "match_pattern": "regex",
+          "match": "^[a-zA-Z_0-9]*(period)[a-zA-Z_0-9]*$",
+          "mapping": {
+            "type": "short"
+          }
+        }
+      },
+      {
+        "keywords": {
+          "match_mapping_type": "string",
+          "match_pattern": "regex",
+          "match": "^[a-zA-Z_0-9]*(description|type|category|code|reference|name|unit|group|account|document)[a-zA-Z_0-9]*$",
+          "mapping": {
+            "type": "keyword"
+          }
+        }
+      }
+    ]
  }
 }
