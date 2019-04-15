@@ -79,7 +79,6 @@ POST _ingest/pipeline/_simulate
  "docs": [
    {
      "_index": "fiscal",
-     "_type": "budget",
      "_id": "AVvJZVQEBr2flFKzrrkr",
      "_score": 1,
      "_source": {
