@@ -52,7 +52,7 @@ You can 'Save' the visualization at the top of Kibana and then add it to a Dashb
 
 The Elasticsearch pipleline was designed for the csv file data format when the project was created.  This may change in the future, and thus the pipeline will need to be updated.
 
-You can see the current pipeline in the file `parse_fiscal_pipeline.json`.  It uses Elasticsearch's grok processor to parse the csv into json.  You can see more information at https://www.elastic.co/guide/en/elasticsearch/reference/6.2/grok-processor.html.
+You can see the current pipeline in the file `parse_fiscal_pipeline.json`.  It uses Elasticsearch's grok processor to parse the csv into json.  You can see more information at https://www.elastic.co/guide/en/elasticsearch/reference/7.0/grok-processor.html.
 
 If you wish to modify this processor, you should first use the simulate end point to ensure you have the format correct.  You can try it in Kibana - select 'Dev Tools' and paste the following in the box on the left and click the play button:
 ```
@@ -90,7 +90,7 @@ POST _ingest/pipeline/_simulate
 ```
 The 'processors' pattern represents the pipeline and the 'docs' represents line of csv data.  You can paste the line in the new file here and play with the pattern until the output looks correct.  Once you have it working, you can modify parse_fiscal_pipeline.json with the new pipeline and re-run `./read.sh`
 
-You may also wish to modify the mapping located in fiscal_template.json to include new fields.  You can check out the Elasticsearch field types here: https://www.elastic.co/guide/en/elasticsearch/reference/6.2/mapping-types.html.
+You may also wish to modify the mapping located in fiscal_template.json to include new fields.  You can check out the Elasticsearch field types here: https://www.elastic.co/guide/en/elasticsearch/reference/7.0/mapping-types.html.
 
 The general pipeline and import setup was modeled after this article: https://www.elastic.co/blog/indexing-csv-elasticsearch-ingest-node.
 
