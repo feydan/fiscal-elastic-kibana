@@ -42,7 +42,7 @@ dataFile="the_State_of_California_All_Fiscal_Years.csv"
 # Grab the file if it doesn't exist - change this link if the data updates
 if [ ! -f $dataFile ]; then
 	echo "Downloading data file ${dataFile}"
-	wget -O $dataFile "https://s3.amazonaws.com/og-datamanager-uploads/production/grid_data_api/dataset_exports/758c8a00-c9a0-4178-90c3-1cd6e99d72f8/csvs/original/fiscalca20181009-5604-1o2qb06_all.csv?1539124943"
+	wget -O $dataFile "https://s3.amazonaws.com/og-datamanager-uploads/production/grid_data_api/dataset_exports/8d7db348-5ff4-4ff4-87ac-032c20d943a3/csvs/original/fiscalca20190207-9-ss6ins_all.csv?1549502864"
 	echo
 fi
 
@@ -72,7 +72,7 @@ do
 		echo "" >> "${f}"
 	fi
 
-	# The mod value (defaul 2) represents about how many threads to use to make bulk requests
+	# The mod value (default 2) represents about how many threads to use to make bulk requests
 	# This can be set higher for higher import throughput, but if it is set too high, it could 
 	# cause garbage collection issues and/or crash elasticsearch.
 	# Do not set this higher than your total threads

@@ -6,11 +6,15 @@ Downloads Fiscal Data (http://fiscalca.opengov.com) and imports it into Elastics
 
 ## Installation
 
-- If you do not have docker and docker-compose, install it/them.
+- If you do not have docker and docker-compose, install it/them: https://docs.docker.com/docker-for-mac/install/
 - Start Elasticsearch and Kibana using docker-compose: `docker-compose up`.  
 - Wait a minute or two for them to start and connect, then navigate to Kibana: http://localhost:5601 to ensure everything started properly
 
 ## Import data
+
+*For Mac users* - Before executing ./read.sh, please do the following:
+1. `brew install gxargs`
+2. Replace `xargs` with `gxargs` on line 51 of `read.sh`
 
 To automatically create the elasticsearch template, pipeline, and index, download the Fiscal data, and start importing, run `./read.sh`.  Once you see the progress indicator, you can start configuring Kibana while the data is importing.
 
