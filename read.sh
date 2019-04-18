@@ -55,7 +55,7 @@ rm -rf split
 mkdir split
 
 # Split file into chunks to bulk index
-split -l 5000 requests.jsonl split/
+split -l 5000 -a 4 requests.jsonl split/
 
 # Submit file as a bulk indexing request to elastic using the parse_fiscal pipeline
 echo "Indexing data file"
