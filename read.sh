@@ -37,18 +37,24 @@ curl -XPUT "${elasticsearchUrl}/${index}"
 echo
 echo
 
-dataFile="the_State_of_California_All_Fiscal_Years.csv"
+dataFile="data.zip"
 
 # Grab the file if it doesn't exist - change this link if the data updates
 if [ ! -f $dataFile ]; then
 	echo "Downloading data file ${dataFile}"
-	wget -O $dataFile "https://s3.amazonaws.com/og-datamanager-uploads/production/grid_data_api/dataset_exports/8d7db348-5ff4-4ff4-87ac-032c20d943a3/csvs/original/fiscalca20190207-9-ss6ins_all.csv?1549502864"
+	wget -O $dataFile "https://file.ac/download-all/21euCO1oZvDIdainl9w56Q/"
+	unzip $dataFile -d data
 	echo
 fi
 
 # Turn csv into bulk request format
 echo "Processing csv into bulk request format - this may take a few minutes"
-tail -n +2 $dataFile | sed -e 's/"/\\"/g' | xargs -d '\n' printf '{"index":{"_index":"'"$index"'","pipeline":"parse_fiscal"}\n{"budget":"%s"}\n' > requests.jsonl
+if [ ! -f requests.jsonl ]; then
+	for f in data/*
+	do
+		tail -n +2 $f | sed -e `printf 's/\r$//g'` -e 's/"/\\"/g' | xargs -d '\n' printf '{"index":{"_index":"'"$index"'","pipeline":"parse_fiscal"}\n{"budget":"%s"}\n' >> requests.jsonl
+	done
+fi
 
 # Clean previous
 rm -rf split
@@ -96,4 +102,5 @@ done
 rm -rf split
 rm requests.jsonl
 
+echo
 echo "Import complete"
