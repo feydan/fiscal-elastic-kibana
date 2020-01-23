@@ -18,17 +18,17 @@ echo
 # Prompt to delete if index exists
 status=$(curl -s -o /dev/null -I -w "%{http_code}" http://localhost:9200/${index})
 if [[ $status != 404 ]]; then
-	read -p "The index ${index} exists, do you want to delete and re-import the data? " -n 1 -r
-	echo    # (optional) move to a new line
-	if [[ $REPLY =~ ^[Yy]$ ]]; then
-		echo "Deleting index ${index}"
-	    curl -XDELETE "${elasticsearchUrl}/${index}"
-	    echo
-	    echo
-	else
-		echo "Did not answer yes, exiting."
-		exit 1
-	fi
+  read -p "The index ${index} exists, do you want to delete and re-import the data? " -n 1 -r
+  echo    # (optional) move to a new line
+  if [[ $REPLY =~ ^[Yy]$ ]]; then
+    echo "Deleting index ${index}"
+      curl -XDELETE "${elasticsearchUrl}/${index}"
+      echo
+      echo
+  else
+    echo "Did not answer yes, exiting."
+    exit 1
+  fi
 fi
 
 # Add the index
@@ -41,19 +41,19 @@ dataFile="data.zip"
 
 # Grab the file if it doesn't exist - change this link if the data updates
 if [ ! -f $dataFile ]; then
-	echo "Downloading data file ${dataFile}"
-	wget -O $dataFile "https://file.ac/download-all/21euCO1oZvDIdainl9w56Q/"
-	unzip $dataFile -d data
-	echo
+  echo "Downloading data file ${dataFile}"
+  wget -O $dataFile "https://file.ac/download-all/21euCO1oZvDIdainl9w56Q/"
+  unzip $dataFile -d data
+  echo
 fi
 
 # Turn csv into bulk request format
 echo "Processing csv into bulk request format - this may take a few minutes"
 if [ ! -f requests.jsonl ]; then
-	for f in data/*
-	do
-		tail -n +2 $f | sed -e `printf 's/\r$//g'` -e 's/"/\\"/g' | xargs -d '\n' printf '{"index":{"_index":"'"$index"'","pipeline":"parse_fiscal"}\n{"budget":"%s"}\n' >> requests.jsonl
-	done
+  for f in data/*
+  do
+    tail -n +2 $f | sed -e `printf 's/\r$//g'` -e 's/"/\\"/g' | xargs -d '\n' printf '{"index":{"_index":"'"$index"'","pipeline":"parse_fiscal"}\n{"budget":"%s"}\n' >> requests.jsonl
+  done
 fi
 
 # Clean previous
@@ -70,33 +70,33 @@ i=0;
 echo -ne "[#          ] 0/${total} (0%)\r"
 for f in split/*
 do
-	i=$(($i+1))
+  i=$(($i+1))
 
-	# Need to add a newline at the end of each file
-	last=$(tail -n 1 $f)
-	if [[ ! -z "${last}" ]]; then
-		echo "" >> "${f}"
-	fi
+  # Need to add a newline at the end of each file
+  last=$(tail -n 1 $f)
+  if [[ ! -z "${last}" ]]; then
+    echo "" >> "${f}"
+  fi
 
-	# The mod value (default 2) represents about how many threads to use to make bulk requests
-	# This can be set higher for higher import throughput, but if it is set too high, it could 
-	# cause garbage collection issues and/or crash elasticsearch.
-	# Do not set this higher than your total threads
-	mod=$((${i}%2))
-	if [[ $mod == 0 ]]; then
- 		curl -s -XPOST "http://localhost:9200/_bulk" -H "Content-Type: application/x-ndjson" --data-binary "@${f}" > /dev/null
- 	else
- 		curl -s -XPOST "http://localhost:9200/_bulk" -H "Content-Type: application/x-ndjson" --data-binary "@${f}" > /dev/null &
- 	fi
+  # The mod value (default 2) represents about how many threads to use to make bulk requests
+  # This can be set higher for higher import throughput, but if it is set too high, it could 
+  # cause garbage collection issues and/or crash elasticsearch.
+  # Do not set this higher than your total threads
+  mod=$((${i}%2))
+  if [[ $mod == 0 ]]; then
+     curl -s -XPOST "http://localhost:9200/_bulk" -H "Content-Type: application/x-ndjson" --data-binary "@${f}" > /dev/null
+   else
+     curl -s -XPOST "http://localhost:9200/_bulk" -H "Content-Type: application/x-ndjson" --data-binary "@${f}" > /dev/null &
+   fi
 
-	progress='#'
-	ticks=$(printf "%.0f" $(bc <<< "scale=1; ${i}/${total}*10"))
-	for ((j=0;j<10;j++)); do
-		if (( $ticks > $j )); then progress="${progress}#"; else progress="${progress} "; fi
-	done
+  progress='#'
+  ticks=$(printf "%.0f" $(bc <<< "scale=1; ${i}/${total}*10"))
+  for ((j=0;j<10;j++)); do
+    if (( $ticks > $j )); then progress="${progress}#"; else progress="${progress} "; fi
+  done
 
-	percent=$(printf "%.0f" $(bc <<< "scale=2; ${i}/${total}*100"))
-	echo -ne "[${progress}] ${i}/${total} (${percent}%)\r"
+  percent=$(printf "%.0f" $(bc <<< "scale=2; ${i}/${total}*100"))
+  echo -ne "[${progress}] ${i}/${total} (${percent}%)\r"
 done
 
 rm -rf split
